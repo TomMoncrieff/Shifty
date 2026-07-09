@@ -149,5 +149,33 @@
       "isOpen24Hours": false,
       "isOpenNow": false
     }
+  ],
+  "exerciseAdvice": [
+    {
+      "id": "exadv_001",
+      "title": "When Should Shift Workers Exercise?",
+      "icon": "figure.run",
+      "body": "Your body temperature and strength peak a few hours after waking, whatever time that is. Aim to train in that window rather than at a fixed clock time. Avoid intense exercise within ~3 hours of your planned sleep, as it raises core temperature and delays sleep onset. On low-energy days, a gentle walk or mobility work is enough — consistency beats intensity for shift workers."
+    },
+    {
+      "id": "exadv_002",
+      "title": "Training Around Night Shifts",
+      "icon": "moon.stars.fill",
+      "body": "Before a night shift, keep sessions light-to-moderate so you don't arrive depleted. After a run of nights, prioritise recovery — easy movement, stretching, and sleep — before returning to hard training. Listen to your body: over-training on top of sleep debt raises injury and illness risk."
+    }
+  ],
+  "nutritionAdvice": [
+    {
+      "id": "nuadv_001",
+      "title": "Eating on Night Shift",
+      "icon": "moon.zzz.fill",
+      "body": "Your gut has a body clock too. Eating large meals in the middle of the night impairs digestion and blood-sugar control. Where possible, eat your main meal before your shift, keep overnight food light (protein + veg, not heavy carbs or sugar), and avoid a big meal right before day-sleep."
+    },
+    {
+      "id": "nuadv_002",
+      "title": "Caffeine Without Wrecking Sleep",
+      "icon": "cup.and.saucer.fill",
+      "body": "Caffeine has a half-life of 5–7 hours, so a coffee at 2am is still ~half-active at 8am. Use it strategically early in your shift and cut off 8–10 hours before your planned sleep. Water and a short walk beat a late-shift coffee for staying alert without stealing your sleep."
+    }
   ]
 }
