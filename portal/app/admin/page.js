@@ -148,7 +148,7 @@ function PartnerSection({ onStatus }) {
 function VideoSection({ onStatus }) {
   const [rows, setRows, load] = useTable('videos', 'sort_order');
   function edit(i, k, v) { setRows((r) => r.map((row, j) => j === i ? { ...row, [k]: v } : row)); }
-  const blank = { kind: 'exercise', title: '', description: '', instructions: [], video_url: '', duration: '', category: 'HIIT', tags: [], sort_order: 0, active: true };
+  const blank = { kind: 'exercise', title: '', description: '', instructions: [], video_url: '', thumbnail_url: '', duration: '', category: 'HIIT', tags: [], sort_order: 0, active: true };
   return (
     <Section title="Videos" onAdd={() => setRows((r) => [blank, ...(r || [])])}>
       {rows === null ? <p>Loading…</p> : rows.map((v, i) => (
@@ -165,7 +165,8 @@ function VideoSection({ onStatus }) {
           </div>
           <Field label="Title" value={v.title} onChange={(x) => edit(i, 'title', x)} />
           <Field label="Description" value={v.description} onChange={(x) => edit(i, 'description', x)} />
-          <Field label="Video URL" value={v.video_url} onChange={(x) => edit(i, 'video_url', x)} />
+          <Field label="Video URL (leave blank for a photo-only item)" value={v.video_url} onChange={(x) => edit(i, 'video_url', x)} />
+          <Field label="Image URL (photo shown on the card — optional)" value={v.thumbnail_url} onChange={(x) => edit(i, 'thumbnail_url', x)} />
           <Field label="Duration" value={v.duration} onChange={(x) => edit(i, 'duration', x)} />
           <label>Instructions (one step per line)</label>
           <textarea rows={4} value={(v.instructions || []).join('\n')}
