@@ -113,13 +113,21 @@ function Field({ label, value, onChange, placeholder }) {
 function PartnerSection({ onStatus }) {
   const [rows, setRows, load] = useTable('partners');
   function edit(i, k, v) { setRows((r) => r.map((row, j) => j === i ? { ...row, [k]: v } : row)); }
-  const blank = { name: '', address: '', latitude: null, longitude: null, phone: '', discount: '', daily_deal: null, rating: 4.5, open_hours: '', is_open_24h: false, owner_id: null, active: true };
+  const blank = { name: '', address: '', latitude: null, longitude: null, phone: '', discount: '', daily_deal: null, rating: 4.5, open_hours: '', is_open_24h: false, owner_id: null, active: true, type: 'cafe', is_online: false, website: '' };
   return (
     <Section title="Partners" onAdd={() => setRows((r) => [blank, ...(r || [])])}>
       {rows === null ? <p>Loading…</p> : rows.map((v, i) => (
         <div className="subcard" key={v.id || `new-${i}`}>
           <Field label="Name" value={v.name} onChange={(x) => edit(i, 'name', x)} />
-          <Field label="Address" value={v.address} onChange={(x) => edit(i, 'address', x)} />
+          <div><label>Type</label>
+            <select value={v.type || 'cafe'} onChange={(e) => edit(i, 'type', e.target.value)}>
+              <option value="cafe">Cafe</option>
+              <option value="bar">Wine & Pub</option>
+              <option value="gym">Gym & Pilates</option>
+              <option value="spa">Sauna & Spa</option>
+              <option value="online">Online store</option>
+            </select></div>
+          <Field label="Address (leave blank for online-only partners)" value={v.address} onChange={(x) => edit(i, 'address', x)} />
           <div className="row2">
             <Field label="Latitude" value={v.latitude} onChange={(x) => edit(i, 'latitude', parseFloat(x) || null)} />
             <Field label="Longitude" value={v.longitude} onChange={(x) => edit(i, 'longitude', parseFloat(x) || null)} />
@@ -131,7 +139,9 @@ function PartnerSection({ onStatus }) {
             <Field label="Rating" value={v.rating} onChange={(x) => edit(i, 'rating', parseFloat(x) || null)} />
             <Field label="Open hours" value={v.open_hours} onChange={(x) => edit(i, 'open_hours', x)} />
           </div>
+          <Field label="Website (for online partners, e.g. https://mymusclechef.com)" value={v.website} onChange={(x) => edit(i, 'website', x)} />
           <Field label="Owner user UID (links their login)" value={v.owner_id} onChange={(x) => edit(i, 'owner_id', x || null)} />
+          <label className="check"><input type="checkbox" checked={!!v.is_online} onChange={(e) => edit(i, 'is_online', e.target.checked)} /> Online only (no map pin — shows in the List with a website link)</label>
           <label className="check"><input type="checkbox" checked={!!v.is_open_24h} onChange={(e) => edit(i, 'is_open_24h', e.target.checked)} /> Open 24 hours</label>
           <label className="check"><input type="checkbox" checked={!!v.active} onChange={(e) => edit(i, 'active', e.target.checked)} /> Active (visible in app)</label>
           <div className="row">
