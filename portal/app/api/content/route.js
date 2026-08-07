@@ -26,4 +26,15 @@ export async function GET() {
   const a = advice.data ?? [];
 
   const body = {
-    exerciseVideos:  v.filter((x) => x.kind === 'e
+    exerciseVideos:  v.filter((x) => x.kind === 'exercise').map(mapVideo),
+    nutritionVideos: v.filter((x) => x.kind === 'nutrition').map(mapVideo),
+    cafePartners:    (partners.data ?? []).map(mapPartner),
+    exerciseAdvice:  a.filter((x) => x.kind === 'exercise').map(mapAdvice),
+    nutritionAdvice: a.filter((x) => x.kind === 'nutrition').map(mapAdvice),
+  };
+
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' },
+  });
+}
