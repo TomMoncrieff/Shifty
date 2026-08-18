@@ -158,7 +158,7 @@ function PartnerSection({ onStatus }) {
 function VideoSection({ onStatus }) {
   const [rows, setRows, load] = useTable('videos', 'sort_order');
   function edit(i, k, v) { setRows((r) => r.map((row, j) => j === i ? { ...row, [k]: v } : row)); }
-  const blank = { kind: 'exercise', title: '', description: '', instructions: [], video_url: '', thumbnail_url: '', duration: '', category: 'HIIT', tags: [], sort_order: 0, active: true };
+  const blank = { kind: 'exercise', title: '', description: '', instructions: [], video_url: '', thumbnail_url: '', duration: '', category: 'HIIT', tags: [], sort_order: 0, active: true, slides: [] };
   return (
     <Section title="Videos" onAdd={() => setRows((r) => [blank, ...(r || [])])}>
       {rows === null ? <p>Loading…</p> : rows.map((v, i) => (
@@ -177,6 +177,11 @@ function VideoSection({ onStatus }) {
           <Field label="Description" value={v.description} onChange={(x) => edit(i, 'description', x)} />
           <Field label="Video URL (leave blank for a photo-only item)" value={v.video_url} onChange={(x) => edit(i, 'video_url', x)} />
           <Field label="Image URL (photo shown on the card — optional)" value={v.thumbnail_url} onChange={(x) => edit(i, 'thumbnail_url', x)} />
+          <label>Recipe slideshow (optional) — one step per line as: image URL | instruction</label>
+          <textarea rows={4}
+            placeholder={"https://.../step1.jpg | Chop the vegetables\nhttps://.../step2.jpg | Add to the pan and cook 5 min"}
+            value={(v.slides || []).map((s) => `${s.image} | ${s.text}`).join('\n')}
+            onChange={(e) => edit(i, 'slides', e.target.value.split('\n').filter((l) => l.trim()).map((l) => { const k = l.indexOf('|'); return k === -1 ? { image: l.trim(), text: '' } : { image: l.slice(0, k).trim(), text: l.slice(k + 1).trim() }; }))} />
           <Field label="Duration" value={v.duration} onChange={(x) => edit(i, 'duration', x)} />
           <label>Instructions (one step per line)</label>
           <textarea rows={4} value={(v.instructions || []).join('\n')}
