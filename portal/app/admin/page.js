@@ -90,7 +90,15 @@ function useTable(table, order = 'name') {
 }
 
 async function saveRow(table, row, onStatus, load) {
-  const { id, ...fields } = row;
+  const { id, slides_raw, ...fields } = row;
+  // Parse the raw slideshow text into slides only at save time (so spaces are
+  // preserved while typing). slides_raw is never sent to the database.
+  if (slides_raw !== undefined) {
+    fields.slides = slides_raw.split('\n').filter((l) => l.trim()).map((l) => {
+      const k = l.indexOf('|');
+      return k === -1 ? { image: l.trim(), text: '' } : { image: l.slice(0, k).trim(), text: l.slice(k + 1).trim() };
+    });
+  }
   const res = id
     ? await supabase.from(table).update(fields).eq('id', id)
     : await supabase.from(table).insert(fields);
@@ -180,8 +188,8 @@ function VideoSection({ onStatus }) {
           <label>Recipe slideshow (optional) — one step per line as: image URL | instruction</label>
           <textarea rows={4}
             placeholder={"https://.../step1.jpg | Chop the vegetables\nhttps://.../step2.jpg | Add to the pan and cook 5 min"}
-            value={(v.slides || []).map((s) => `${s.image} | ${s.text}`).join('\n')}
-            onChange={(e) => edit(i, 'slides', e.target.value.split('\n').filter((l) => l.trim()).map((l) => { const k = l.indexOf('|'); return k === -1 ? { image: l.trim(), text: '' } : { image: l.slice(0, k).trim(), text: l.slice(k + 1).trim() }; }))} />
+            value={v.slides_raw !== undefined ? v.slides_raw : (v.slides || []).map((s) => `${s.image} | ${s.text}`).join('\n')}
+            onChange={(e) => edit(i, 'slides_raw', e.target.value)} />
           <Field label="Duration" value={v.duration} onChange={(x) => edit(i, 'duration', x)} />
           <label>Instructions (one step per line)</label>
           <textarea rows={4} value={(v.instructions || []).join('\n')}
