@@ -65,6 +65,7 @@ export default function Home() {
           <nav className="nav-links">
             <a href="#features">Features</a>
             <a href="#business">For Businesses</a>
+            <a href="/science.html">The Science</a>
             <a href="/support.html">Support</a>
           </nav>
         </div>
@@ -157,6 +158,7 @@ export default function Home() {
             </div>
           </div>
           <div className="foot-links">
+            <a href="/science.html">The Science</a>
             <a href="/privacy.html">Privacy Policy</a>
             <a href="/terms.html">Terms of Service</a>
             <a href="/support.html">Support</a>
