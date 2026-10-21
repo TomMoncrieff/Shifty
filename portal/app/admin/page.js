@@ -99,6 +99,14 @@ async function saveRow(table, row, onStatus, load) {
       return k === -1 ? { image: l.trim(), text: '' } : { image: l.slice(0, k).trim(), text: l.slice(k + 1).trim() };
     });
   }
+  // Normalise nutrition: drop it entirely if every field is blank, so recipes
+  // without nutrition info keep a clean null instead of an empty object.
+  if (fields.nutrition && typeof fields.nutrition === 'object') {
+    const n = fields.nutrition;
+    const allBlank = ['calories', 'protein', 'carbs', 'fat', 'servings'].every((k) => !(n[k] && String(n[k]).trim()))
+      && (!n.notes || n.notes.length === 0);
+    fields.nutrition = allBlank ? null : n;
+  }
   const res = id
     ? await supabase.from(table).update(fields).eq('id', id)
     : await supabase.from(table).insert(fields);
@@ -166,7 +174,11 @@ function PartnerSection({ onStatus }) {
 function VideoSection({ onStatus }) {
   const [rows, setRows, load] = useTable('videos', 'sort_order');
   function edit(i, k, v) { setRows((r) => r.map((row, j) => j === i ? { ...row, [k]: v } : row)); }
-  const blank = { kind: 'exercise', title: '', description: '', instructions: [], video_url: '', thumbnail_url: '', duration: '', category: 'HIIT', tags: [], sort_order: 0, active: true, slides: [] };
+  const blank = { kind: 'exercise', title: '', description: '', instructions: [], video_url: '', thumbnail_url: '', duration: '', category: 'HIIT', tags: [], sort_order: 0, active: true, slides: [], nutrition: null };
+  // Update one field inside a row's nutrition object (creating it if needed).
+  function editNutrition(i, k, val) {
+    setRows((r) => r.map((row, j) => j === i ? { ...row, nutrition: { ...(row.nutrition || {}), [k]: val } } : row));
+  }
   return (
     <Section title="Videos" onAdd={() => setRows((r) => [blank, ...(r || [])])}>
       {rows === null ? <p>Loading…</p> : rows.map((v, i) => (
@@ -194,6 +206,20 @@ function VideoSection({ onStatus }) {
           <label>Instructions (one step per line)</label>
           <textarea rows={4} value={(v.instructions || []).join('\n')}
             onChange={(e) => edit(i, 'instructions', e.target.value.split('\n').filter((s) => s.trim()))} />
+          <label style={{ marginTop: 10, fontWeight: 600 }}>Nutrition (optional) — shown in its own section in the app</label>
+          <div className="row2">
+            <Field label="Calories" value={v.nutrition?.calories} placeholder="520 kcal" onChange={(x) => editNutrition(i, 'calories', x)} />
+            <Field label="Protein" value={v.nutrition?.protein} placeholder="38 g" onChange={(x) => editNutrition(i, 'protein', x)} />
+          </div>
+          <div className="row2">
+            <Field label="Carbs" value={v.nutrition?.carbs} placeholder="45 g" onChange={(x) => editNutrition(i, 'carbs', x)} />
+            <Field label="Fat" value={v.nutrition?.fat} placeholder="18 g" onChange={(x) => editNutrition(i, 'fat', x)} />
+          </div>
+          <Field label="Servings" value={v.nutrition?.servings} placeholder="Serves 2" onChange={(x) => editNutrition(i, 'servings', x)} />
+          <label>Nutrition notes (one per line, optional)</label>
+          <textarea rows={2} placeholder={"High protein\nDairy-free"}
+            value={(v.nutrition?.notes || []).join('\n')}
+            onChange={(e) => editNutrition(i, 'notes', e.target.value.split('\n').map((s) => s.trim()).filter(Boolean))} />
           <Field label="Tags (comma separated)" value={(v.tags || []).join(', ')}
             onChange={(x) => edit(i, 'tags', x.split(',').map((t) => t.trim()).filter(Boolean))} />
           <Field label="Sort order" value={v.sort_order} onChange={(x) => edit(i, 'sort_order', parseInt(x) || 0)} />
