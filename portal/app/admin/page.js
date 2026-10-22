@@ -141,7 +141,9 @@ function PartnerSection({ onStatus }) {
               <option value="bar">Wine & Pub</option>
               <option value="gym">Gym & Pilates</option>
               <option value="spa">Sauna & Spa</option>
+              <option value="tech">Tech Store</option>
               <option value="online">Online store</option>
+              <option value="other">Other</option>
             </select></div>
           <Field label="Address (leave blank for online-only partners)" value={v.address} onChange={(x) => edit(i, 'address', x)} />
           <div className="row2">
