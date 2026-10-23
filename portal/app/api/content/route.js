@@ -1,3 +1,10 @@
+// Public content endpoint for the Shifty iOS app.
+// Returns JSON in the EXACT shape ShiftyAll.swift's ContentBundle expects,
+// so you only need to point ContentManager.remoteContentURL at this URL —
+// no Swift model changes required.
+//
+// URL once deployed:  https://<your-vercel-app>.vercel.app/api/content
+
 import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic'; // always fetch fresh from Supabase
@@ -66,7 +73,10 @@ export async function GET() {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
-      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+      // CDN may cache 60s (s-maxage), but clients must revalidate every time
+      // (max-age=0, must-revalidate) so the app never shows a stale feed —
+      // newly published tips/videos/partners appear on the next launch.
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120, max-age=0, must-revalidate',
       'Access-Control-Allow-Origin': '*',
     },
   });
