@@ -77,13 +77,15 @@ export default function Home() {
             <div className="badge">Wellbeing for shift workers</div>
             <h1>Take back your sleep,<br /><span className="grad">whatever shift you work</span></h1>
             <p>
-              Nurses, paramedics, hospitality, drivers, healthcare and factory workers — Shifty builds a
-              personalised, science-backed plan around your shifts, so your body clock isn't constantly at war
-              with your roster.
+              Import your roster and Shifty builds a personalised, science-backed plan around it — when to sleep,
+              catch daylight and cut the caffeine — plus quick workouts, shift-friendly recipes, a daily movement
+              streak and perks at local partners. For nurses, paramedics, hospitality, drivers and anyone whose
+              body clock is at war with their roster.
             </p>
-            <a className="cta" href="#features">Explore features</a>
+            <a className="cta" href="https://apps.apple.com/app/id6807352479">Download on the App Store</a>
+            <a className="cta ghost" href="#features">Explore features</a>
             <a className="cta ghost" href="#business">Partner with us</a>
-            <p style={{ marginTop: '20px', fontSize: '14px', opacity: 0.6 }}>Coming soon to the App Store.</p>
+            <p style={{ marginTop: '20px', fontSize: '14px', opacity: 0.6 }}>Out now — free on the App Store.</p>
           </div>
         </section>
 
